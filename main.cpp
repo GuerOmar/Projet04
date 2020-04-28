@@ -2,19 +2,115 @@
 #include <stdlib.h>
 #include <time.h>
 #include <cstdlib>
+#include <map>
+#include <vector>
+#include <fstream>
 #include "case.h"
 #include "partie.h"
 using namespace std;
+map<string ,vector< string > > mp_p ;
+map<string , int > mp_w ;
+map<string ,int > mp_l ;
 void menu() ;
 void jouer() ;
+void historique() ;
+void load(){
+    ifstream fw("fw.txt",ios::in);
+    if (fw){
+        string ch1,ch2;
+        int n ;
+
+        while(fw.peek()!=EOF){
+        fw >> ch1 >> ch2 >> n ;
+        mp_w[ch1+" "+ch2]=n ;
+        }
+    }
+    fw.close();
+    ifstream fl("fl.txt",ios::in);
+    if (fl){
+        string ch1,ch2;
+        int n ;
+        while(fl.peek()!=EOF){
+        fl >> ch1 >> ch2 >> n ;
+        mp_l[ch1+" "+ch2]=n ;
+        }
+    }
+    fl.close();
+    ifstream fp("pw.txt",ios::in) ;
+    ifstream fnp("pnw.txt",ios::in) ;
+    if (fp && fnp) {
+        string ch1,ch2,ch;
+        int n ;
+        while(!fnp.eof()){
+            fnp >> ch1 >> ch2 >> n ;
+            for (int i=0;i<n;i++){
+                getline(fp,ch) ;
+                mp_p[ch1+" "+ch2].push_back(ch) ;
+            }
+        }
+
+
+
+
+
+    }
+    fp.close() ;
+    fnp.close() ;
+
+}
+void save(){
+    ofstream sfw("fw.txt",ios::out);
+    if (sfw){
+        map<string ,int>::iterator it ;
+        for(it=mp_w.begin();it!=mp_w.end();it++){
+
+            sfw << it->first <<" "<<it->second ;
+            if (++it!=mp_w.end()) sfw << "\n" ;
+            it-- ;
+        }
+    }
+    sfw.close() ;
+    ofstream sfl("fl.txt",ios::out);
+    if(sfl){
+        map<string ,int>::iterator it2 ;
+        for(it2=mp_l.begin();it2!=mp_l.end();it2++){
+            sfl << it2->first <<" "<<it2->second ;
+            if (++it2!=mp_l.end()) sfl << "\n" ;
+            it2-- ;
+        }
+    }
+    sfl.close() ;
+    ofstream sfp("pw.txt",ios::out) ;
+    ofstream sfnp("pnw.txt",ios::out) ;
+    if (sfp && sfnp){
+    map<string ,vector< string > >::iterator it3 ;
+        for(it3=mp_p.begin();it3!=mp_p.end();it3++){
+            sfnp << it3->first << " "<< it3->second.size() ;
+            if (++it3!=mp_p.end()) sfnp << "\n" ;
+            it3-- ;
+            while(!it3->second.empty()){
+                sfp << it3->second.back()<<"\n" ;
+                it3->second.pop_back() ;
+            }
+        }
+    }
+    sfp.close() ;
+    sfnp.close() ;
+
+
+}
 int main()
 {
+    load() ;
+    //score() ;
+
     menu() ;
+    save() ;
     return 0;
 }
 void menu(){
     cout <<"1-jouer" << endl ;
-    cout << "2-score" << endl ;
+    cout << "2-historique" << endl ;
     cout << "3-quitter" << endl ;
     int n ;
     cin >> n ;
@@ -23,7 +119,10 @@ void menu(){
         system("cls") ;
         jouer() ;
         break ;
-
+    case 2:
+        system("cls") ;
+        historique() ;
+        break ;
     case 3:
         system("cls");
     }
@@ -32,6 +131,10 @@ void jouer(){
     cout << "donner votre nom et prenom :" ;
     string nom,prenom ;
     cin >> nom >> prenom ;
+    time_t tt = time(0) ;
+    string dt = ctime(&tt) ;
+    mp_p[nom+" "+prenom].push_back(dt) ;
+
     system("cls") ;
     cout << "choisir la difficulte : "<< endl ;
     cout << "1-difficile" <<endl ;
@@ -78,8 +181,22 @@ void jouer(){
     }while(p.selectAction(n-1,h,q)) ;
     system("cls") ;
     cout << p ;
-    if (p.resultatPartie()){cout << "\n \n Bien joue !!";}
-    else {cout <<"\n\nGame Over" ;}
+
+
+    if (p.resultatPartie()){
+        cout << "\n \n Bien joue !!";
+        if(mp_w[nom+" "+prenom]) mp_w[nom+" "+prenom]+=1 ;
+
+        else  mp_w[nom+" "+prenom]=1 ;
+
+
+    }
+    else {
+        cout <<"\n\nGame Over" ;
+        if(mp_l[nom+" "+prenom]) mp_l[nom+" "+prenom]+=1 ;
+        else mp_l[nom+" "+prenom]=1 ;
+    }
+
     cout << "\n\n 1-rejouer 2-retourner vers menu\n" ;
     cin >> n ;
     switch (n){
@@ -87,6 +204,7 @@ void jouer(){
         system("cls") ;
         jouer() ;
         break ;
+
     case 2:
         system("cls") ;
         menu();
@@ -95,4 +213,25 @@ void jouer(){
 
 
 
+}
+void historique(){
+    map<string ,vector< string > >::iterator it3 ;
+    for(it3=mp_p.begin();it3!=mp_p.end();it3++){
+        cout << it3->first <<" a joue "<<it3->second.size()<<" parties : " ;
+        if (mp_w[it3->first]) cout << mp_w[it3->first] ;
+        else cout << 0;
+        cout <<" gagnes  " ;
+        if (mp_l[it3->first]) cout << mp_l[it3->first] ;
+        else cout << 0;
+        cout << " perdues" << endl ;
+        for(unsigned int j=0; j<it3->second.size();j++ ){
+            cout << it3->second[j] << endl ;
+        }
+
+    }
+    cout << "\n\n 1-retourner vers menu\n" ;
+    int n ;
+    cin >> n ;
+    system("cls") ;
+    menu() ;
 }
