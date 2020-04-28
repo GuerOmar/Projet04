@@ -1,0 +1,31 @@
+# depslib dependency file v1.0
+1588028269 source:e:\c++ oo\demineurs\main.cpp
+	<iostream>
+	<stdlib.h>
+	<time.h>
+	<cstdlib>
+	"case.h"
+	"partie.h"
+
+1587611904 e:\c++ oo\demineurs\case.h
+	<iostream>
+	<iostream>
+
+1587611904 source:e:\c++ oo\demineurs\case.cpp
+	<iostream>
+	"case.h"
+
+1588028870 source:e:\c++ oo\demineurs\partie.cpp
+	<iostream>
+	<stdlib.h>
+	<time.h>
+	<vector>
+	<algorithm>
+	<set>
+	"partie.h"
+
+1588028869 e:\c++ oo\demineurs\partie.h
+	<iostream>
+	<set>
+	"case.h"
+
