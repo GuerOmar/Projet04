@@ -136,3 +136,4 @@ bool Partie::resultatPartie(){
    }
    return true ;
 }
+

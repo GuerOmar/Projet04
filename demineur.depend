@@ -1,0 +1,36 @@
+# depslib dependency file v1.0
+1588721838 source:c:\users\win10\downloads\demineur\main.cpp
+	<iostream>
+	<stdlib.h>
+	<time.h>
+	<cstdlib>
+	<map>
+	<vector>
+	<fstream>
+	"case.h"
+	"partie.h"
+	<chrono>
+	<ctime>
+
+1587608304 c:\users\win10\downloads\demineur\case.h
+	<iostream>
+	<iostream>
+
+1588720418 c:\users\win10\downloads\demineur\partie.h
+	<iostream>
+	<set>
+	"case.h"
+
+1588720418 source:c:\users\win10\downloads\demineur\partie.cpp
+	<iostream>
+	<stdlib.h>
+	<time.h>
+	<vector>
+	<algorithm>
+	<set>
+	"partie.h"
+
+1588111650 source:c:\users\win10\downloads\demineur\case.cpp
+	<iostream>
+	"case.h"
+

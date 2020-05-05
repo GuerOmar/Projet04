@@ -7,7 +7,10 @@
 #include <fstream>
 #include "case.h"
 #include "partie.h"
+#include <chrono>
+#include <ctime>
 using namespace std;
+using namespace std::chrono;
 map<string ,vector< string > > mp_p ;
 map<string , int > mp_w ;
 map<string ,int > mp_l ;
@@ -57,6 +60,11 @@ void load(){
     fp.close() ;
     fnp.close() ;
 
+}
+int score(int n, double x ){
+    int s;
+    s=(1000000/x)* n;
+    return s;
 }
 void save(){
     ofstream sfw("fw.txt",ios::out);
@@ -143,15 +151,19 @@ void jouer(){
     int n ;
     cin >> n ;
     string ch ;
+    int nb;
     switch (n){
     case 1:
         ch="difficile" ;
+        nb=99;
         break ;
     case 2:
         ch="normal" ;
+        nb=40;
         break ;
     case 3:
         ch="facile" ;
+        nb=10;
         break ;
     }
     Partie p(ch) ;
@@ -166,6 +178,8 @@ void jouer(){
     p.placerMine(h,q) ;
     p.calculValeur() ;
     p.selectAction(0,h,q) ;
+    time_point<system_clock> start, end;
+    start =system_clock::now();
 
 
     do{
@@ -184,7 +198,13 @@ void jouer(){
 
 
     if (p.resultatPartie()){
-        cout << "\n \n Bien joue !!";
+        end =system_clock::now();
+        int s;
+        duration<double> elapsed_seconds = end - start;
+        double seconds = duration<double>(elapsed_seconds).count();
+        s=score (nb , seconds);
+        cout << "\n \n Bien joue !!"<<endl;
+        cout<<"Votre score est:"<<s;
         if(mp_w[nom+" "+prenom]) mp_w[nom+" "+prenom]+=1 ;
 
         else  mp_w[nom+" "+prenom]=1 ;
@@ -192,6 +212,7 @@ void jouer(){
 
     }
     else {
+            end =system_clock::now();
         cout <<"\n\nGame Over" ;
         if(mp_l[nom+" "+prenom]) mp_l[nom+" "+prenom]+=1 ;
         else mp_l[nom+" "+prenom]=1 ;
